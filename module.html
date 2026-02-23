@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Viewer - You Bet Your Azure</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    
+    <style>
+        :root {
+            --azure-blue: #0078D4;
+            --azure-light: #50E6FF;
+            --dark-bg: #1E1E1E;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--azure-blue) 0%, #005A9E 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .content-wrapper {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        #markdown-content {
+            line-height: 1.8;
+        }
+        
+        #markdown-content h1 {
+            color: var(--azure-blue);
+            border-bottom: 3px solid var(--azure-blue);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        #markdown-content h2 {
+            color: var(--azure-blue);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        #markdown-content h3 {
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        #markdown-content code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #e83e8c;
+            font-size: 0.9em;
+        }
+        
+        #markdown-content pre {
+            background-color: #282c34;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        #markdown-content pre code {
+            background-color: transparent;
+            color: #abb2bf;
+            padding: 0;
+        }
+        
+        #markdown-content blockquote {
+            border-left: 4px solid var(--azure-blue);
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #666;
+            font-style: italic;
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 5px;
+        }
+        
+        #markdown-content ul, #markdown-content ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        #markdown-content li {
+            margin: 8px 0;
+        }
+        
+        #markdown-content a {
+            color: var(--azure-blue);
+            text-decoration: none;
+        }
+        
+        #markdown-content a:hover {
+            text-decoration: underline;
+        }
+        
+        #markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        #markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        #markdown-content table th,
+        #markdown-content table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        #markdown-content table th {
+            background-color: var(--azure-blue);
+            color: white;
+        }
+        
+        #markdown-content table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .module-nav {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 100px 0;
+        }
+        
+        .loading i {
+            font-size: 3rem;
+            color: var(--azure-blue);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .badge-module {
+            background-color: var(--azure-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: white;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-graduation-cap"></i> You Bet Your Azure™ AI Learning
+            </a>
+            <div>
+                <a href="index.html" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <div id="loading" class="loading">
+            <i class="fas fa-circle-notch"></i>
+            <p class="mt-3">Loading module...</p>
+        </div>
+        <div id="markdown-content" style="display: none;"></div>
+        
+        <!-- Module Navigation -->
+        <div class="module-nav" id="module-nav" style="display: none;">
+            <div>
+                <a href="#" id="prev-module" class="btn btn-outline-primary" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> Previous Module
+                </a>
+            </div>
+            <div>
+                <a href="#" id="next-module" class="btn btn-primary" style="display: none;">
+                    Next Module <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <script>
+        // Configure marked with syntax highlighting
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang }).value;
+                    } catch (err) {}
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            breaks: true,
+            gfm: true
+        });
+        
+        // Get module parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const moduleFile = urlParams.get('module') || 'modules/module-1.md';
+        
+        // Extract module number for navigation
+        const moduleMatch = moduleFile.match(/module-(\d+)/);
+        const currentModule = moduleMatch ? parseInt(moduleMatch[1]) : 1;
+        
+        // Load and render markdown
+        async function loadModule() {
+            try {
+                const response = await fetch(moduleFile);
+                if (!response.ok) {
+                    throw new Error('Module not found');
+                }
+                
+                const markdown = await response.text();
+                const html = marked.parse(markdown);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('markdown-content').innerHTML = html;
+                document.getElementById('markdown-content').style.display = 'block';
+                
+                // Setup navigation
+                setupNavigation();
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+                
+            } catch (error) {
+                document.getElementById('loading').innerHTML = `
+                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                    <p class="mt-3 text-danger">Failed to load module</p>
+                    <p>${error.message}</p>
+                    <a href="index.html" class="btn btn-primary mt-3">
+                        <i class="fas fa-home"></i> Return Home
+                    </a>
+                `;
+            }
+        }
+        
+        function setupNavigation() {
+            const navSection = document.getElementById('module-nav');
+            const prevBtn = document.getElementById('prev-module');
+            const nextBtn = document.getElementById('next-module');
+            
+            navSection.style.display = 'flex';
+            
+            // Previous module
+            if (currentModule > 1) {
+                prevBtn.style.display = 'inline-block';
+                prevBtn.href = `module.html?module=modules/module-${currentModule - 1}.md`;
+            }
+            
+            // Next module (assuming up to module 10)
+            if (currentModule < 10) {
+                nextBtn.style.display = 'inline-block';
+                nextBtn.href = `module.html?module=modules/module-${currentModule + 1}.md`;
+            }
+        }
+        
+        // Load module on page load
+        loadModule();
+    </script>
+</body>
+</html>
